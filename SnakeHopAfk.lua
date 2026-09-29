@@ -1,40 +1,34 @@
---[[
- .____                  ________ ___.    _____                           __                
- |    |    __ _______   \_____  \\_ |___/ ____\_ __  ______ ____ _____ _/  |_  ___________ 
- |    |   |  |  \__  \   /   |   \| __ \   __\  |  \/  ___// ___\\__  \\   __\/  _ \_  __ \
- |    |___|  |  // __ \_/    |    \ \_\ \  | |  |  /\___ \\  \___ / __ \|  | (  <_> )  | \/
- |_______ \____/(____  /\_______  /___  /__| |____//____  >\___  >____  /__|  \____/|__|   
-         \/          \/         \/    \/                \/     \/     \/                   
-          \_Welcome to LuaObfuscator.com   (Alpha 0.10.9) ~  Much Love, Ferib 
+-- =======================================================
+-- 🐍 SNAKE HOP : WITH ANTI-AFK (GITHUB NATIVE EDITION)
+-- =======================================================
 
-]]--
-
-local v0=[=[
-if getgenv().SnakeHopCleanup then pcall(getgenv().SnakeHopCleanup) end
+if getgenv and getgenv().SnakeHopCleanup then pcall(getgenv().SnakeHopCleanup) end
 
 local connections = {}
-getgenv().SnakeHopCleanup = function()
-    for _, c in ipairs(connections) do pcall(function() c:Disconnect() end) end
-    table.clear(connections)
-    local cg = game:GetService("CoreGui")
-    for _, g in ipairs(cg:GetChildren()) do if g.Name == "SnakeHopUI" then g:Destroy() end end
-    local lp = game:GetService("Players").LocalPlayer
-    if lp and lp:FindFirstChild("PlayerGui") then
-        for _, g in ipairs(lp.PlayerGui:GetChildren()) do if g.Name == "SnakeHopUI" then g:Destroy() end end
-    end
-    if gethui then
-        pcall(function()
-            for _, g in ipairs(gethui():GetChildren()) do if g.Name == "SnakeHopUI" then g:Destroy() end end
-        end)
+if getgenv then
+    getgenv().SnakeHopCleanup = function()
+        for _, c in ipairs(connections) do pcall(function() c:Disconnect() end) end
+        table.clear(connections)
+        local cg = game:GetService("CoreGui")
+        for _, g in ipairs(cg:GetChildren()) do if g.Name == "SnakeHopUI" then g:Destroy() end end
+        local lp = game:GetService("Players").LocalPlayer
+        if lp and lp:FindFirstChild("PlayerGui") then
+            for _, g in ipairs(lp.PlayerGui:GetChildren()) do if g.Name == "SnakeHopUI" then g:Destroy() end end
+        end
+        if gethui then
+            pcall(function()
+                for _, g in ipairs(gethui():GetChildren()) do if g.Name == "SnakeHopUI" then g:Destroy() end end
+            end)
+        end
     end
 end
 
--- Auto-Execute untuk pelayan seterusnya (Setiap kali hop)
+-- Auto-Execute bila hop ke server baru (Tarik terus dari GitHub)
 local function queueNextHop()
     local qot = queue_on_teleport or (syn and syn.queue_on_teleport) or queueonteleport
-    if qot and getgenv().SnakeHopScriptRaw then
+    if qot then
         pcall(function()
-            qot(getgenv().SnakeHopScriptRaw)
+            qot('loadstring(game:HttpGet("https://raw.githubusercontent.com/snakestorereal/SnakeHopAfk/main/SnakeHopAfk.lua?t=" .. tick()))()')
         end)
     end
 end
@@ -51,9 +45,9 @@ task.spawn(function()
     local vu = game:GetService("VirtualUser")
     local pgui = player:FindFirstChild("PlayerGui") or player:WaitForChild("PlayerGui", 5)
 
-    getgenv().SnakeHopCleanup()
+    if getgenv and getgenv().SnakeHopCleanup then getgenv().SnakeHopCleanup() end
 
-    -- 🛡️ [NEW] ANTI-AFK ENGINE (ELAK 20-MINIT DISCONNECT KICK)
+    -- 🛡️ ANTI-AFK ENGINE (ELAK 20-MINIT DISCONNECT KICK)
     pcall(function()
         local afkConn = player.Idled:Connect(function()
             vu:CaptureController()
@@ -62,7 +56,7 @@ task.spawn(function()
         table.insert(connections, afkConn)
     end)
 
-    -- 🧹 Bersihkan nama game daripada simbol/kurungan [🌋]
+    -- 🧹 Bersihkan nama game daripada simbol/kurungan
     local function cleanGameTitle(rawName)
         if not rawName or rawName == "" then return "Universal" end
         local clean = rawName:gsub("%b[]", ""):gsub("%b()", "")
@@ -330,7 +324,7 @@ task.spawn(function()
             return
         end
 
-        if (tick() - lastHopTime) < 2.0 then
+        if (tick() - lastHopTime) < 2 then
             updateStatus("WAIT COOLDOWN...", Color3.fromRGB(255, 185, 50))
             return
         end
@@ -349,7 +343,7 @@ task.spawn(function()
 
     local function doRandomHop()
         if isBusy then return end
-        if (tick() - lastHopTime) < 2.0 then
+        if (tick() - lastHopTime) < 2 then
             updateStatus("WAIT COOLDOWN...", Color3.fromRGB(255, 185, 50))
             return
         end
@@ -368,7 +362,7 @@ task.spawn(function()
 
     local function doLowHop()
         if isBusy then return end
-        if (tick() - lastHopTime) < 2.0 then
+        if (tick() - lastHopTime) < 2 then
             updateStatus("WAIT COOLDOWN...", Color3.fromRGB(255, 185, 50))
             return
         end
@@ -486,7 +480,7 @@ task.spawn(function()
     strokeGradient.Color = ColorSequence.new({
         ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 242, 254)),
         ColorSequenceKeypoint.new(0.35, Color3.fromRGB(195, 105, 255)),
-        ColorSequenceKeypoint.new(0.70, Color3.fromRGB(255, 75, 165)),
+        ColorSequenceKeypoint.new(0.7, Color3.fromRGB(255, 75, 165)),
         ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 242, 254))
     })
     strokeGradient.Rotation = 35
@@ -905,14 +899,14 @@ task.spawn(function()
         content, 
         "🔄 REJOIN", 
         UDim2.new(0.5, -12, 0, 22), 
-        UDim2.new(0.5, 4, 0, 110), 
+        UDim2.new(0, 4, 0, 110), 
         Color3.fromRGB(44, 28, 18), 
         Color3.fromRGB(255, 225, 120), 
         Color3.fromRGB(255, 175, 40), 
         8.5
     )
     local function onRejoin()
-        if isBusy or (tick() - lastHopTime) < 2.0 then return end
+        if isBusy or (tick() - lastHopTime) < 2 then return end
         isBusy = true
         lastHopTime = tick()
         updateStatus("REJOINING...", Color3.fromRGB(255, 200, 50))
@@ -929,4 +923,3 @@ task.spawn(function()
     pcall(function() gui.Parent = (gethui and gethui()) or coreGui end)
     if not gui.Parent then gui.Parent = pgui end
 end)
-]=];getgenv().SnakeHopScriptRaw=v0;local v2=queue_on_teleport or (syn and syn.queue_on_teleport) or queueonteleport ;if v2 then pcall(function() v2(v0);end);end local v3,v4=loadstring(v0);if v3 then v3();else warn("Snake HOP Error:",v4);end
